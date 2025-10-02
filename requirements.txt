@@ -1,0 +1,4 @@
+Flask
+langchain
+langchain-google-genai
+python-dotenv
