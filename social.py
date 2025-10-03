@@ -6,18 +6,15 @@ from langchain_core.output_parsers import JsonOutputParser
 from langchain_google_genai import ChatGoogleGenerativeAI
 
 # --- 1. Initialization ---
-# This loads your API key from the .env file for local testing
-# On Render, it will use the Environment Variable you set up
 load_dotenv()
 app = Flask(__name__)
 
 # --- 2. LangChain Setup ---
 # THIS IS THE CORRECTED LINE:
-# It explicitly tells LangChain to use the Google API key from the environment variables.
-# This is the most reliable way to ensure it works both locally and when deployed.
+# We get the environment variable by its NAME, not its value.
 llm = ChatGoogleGenerativeAI(
     model="gemini-2.5-flash",
-    google_api_key=os.environ.get("AIzaSyBTeiQVr8-prrPBMucs69HYM1KgBh38iz8"),
+    google_api_key=os.environ.get("GOOGLE_API_KEY"),
     temperature=0.8
 )
 parser = JsonOutputParser()
@@ -52,14 +49,11 @@ def index():
         topic = request.form.get("topic")
         tone = request.form.get("tone")
         platform = request.form.get("platform")
-        # Get the word_count value from the form
         word_count = request.form.get("word_count")
 
         if topic:
-            # Create the word count instruction for the AI
             word_count_instruction = f"of about {word_count} words" if word_count else "between 50 and 100 words"
             
-            # Run the chain, now including the word count instruction
             result = chain.invoke({
                 "topic": topic,
                 "platform": platform,
