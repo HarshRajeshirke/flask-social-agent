@@ -1,1 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Social Media Post Agent</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; transition: background-color 0.3s, color 0.3s; }
+        .icon-selector input[type="radio"] { display: none; }
+        .icon-selector label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            white-space: nowrap; /* This keeps all buttons the same size */
+        }
+        .icon-selector svg { width: 1.25rem; height: 1.25rem; margin-right: 0.5rem; }
+        
+        /* Dark Mode Styles */
+        .dark .bg-main { background-color: #111827; }
+        .dark .bg-card { background-color: #1f2937; }
+        .dark .bg-input { background-color: #374151; }
+        .dark .text-main { color: #f9fafb; }
+        .dark .text-secondary { color: #9ca3af; }
+        .dark .border-color { border-color: #4b5563; }
+        .dark .icon-selector label { border-color: #4b5563; background-color: #374151; color: #d1d5db; }
+        .dark .icon-selector label:hover { background-color: #4b5563; }
+        .dark .icon-selector input[type="radio"]:checked + label { border-color: #3b82f6; background-color: #3b82f6; color: white; }
 
+        /* Light Mode Styles */
+        .light .bg-main { background-color: #f3f4f6; }
+        .light .bg-card { background-color: #ffffff; }
+        .light .bg-input { background-color: #e5e7eb; }
+        .light .text-main { color: #111827; }
+        .light .text-secondary { color: #4b5563; }
+        .light .border-color { border-color: #d1d5db; }
+        .light .icon-selector label { border-color: #d1d5db; background-color: #f3f4f6; color: #374151; }
+        .light .icon-selector label:hover { background-color: #e5e7eb; }
+        .light .icon-selector input[type="radio"]:checked + label { border-color: #3b82f6; background-color: #3b82f6; color: white; }
+    </style>
+</head>
+<body class="bg-main text-main min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-2xl bg-card rounded-2xl shadow-xl p-8 space-y-6 relative">
+        <button id="theme-toggle" class="absolute top-4 right-4 p-2 rounded-full text-secondary hover:bg-input transition-colors">
+            <svg id="theme-icon-light" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+            <svg id="theme-icon-dark" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+        </button>
+
+        <div class="text-center">
+            <h1 class="text-3xl font-bold text-main">AI Social Media Post Agent</h1>
+            <p class="text-secondary mt-2">Enter a topic and select options to generate a tailored social media post.</p>
+        </div>
+
+        <form method="POST" class="space-y-6">
+              <div>
+                  <label for="topic" class="block text-sm font-medium text-secondary mb-2">Your Topic:</label>
+                  <textarea name="topic" id="topic" class="w-full h-24 p-4 rounded-xl bg-input text-main border border-color focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g., My science fair project about building a mini-volcano" required></textarea>
+              </div>
+
+              <div>
+                  <label for="word_count" class="block text-sm font-medium text-secondary mb-2">Desired Word Count (optional):</label>
+                  <input type="number" name="word_count" id="word_count" class="w-full p-4 rounded-xl bg-input text-main border border-color focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g., 75 (defaults to 50-100)">
+              </div>
+            
+              <div>
+                  <label class="block text-sm font-medium text-secondary mb-2">Select Tone:</label>
+                  <div class="icon-selector grid grid-cols-2 sm:grid-cols-5 gap-3">
+                      <div><input type="radio" id="tone-professional" name="tone" value="Professional" checked><label for="tone-professional">💼 Professional</label></div>
+                      <div><input type="radio" id="tone-casual" name="tone" value="Casual"><label for="tone-casual">😎 Casual</label></div>
+                      <div><input type="radio" id="tone-funny" name="tone" value="Funny"><label for="tone-funny">😂 Funny</label></div>
+                      <div><input type="radio" id="tone-excited" name="tone" value="Excited"><label for="tone-excited">🎉 Excited</label></div>
+                      <div><input type="radio" id="tone-formal" name="tone" value="Formal"><label for="tone-formal">✍ Formal</label></div>
+                  </div>
+              </div>
+            
+              <div>
+                  <label class="block text-sm font-medium text-secondary mb-2">Select Platform:</label>
+                  <div class="icon-selector grid grid-cols-2 sm:grid-cols-5 gap-3">
+                      <div><input type="radio" id="platform-general" name="platform" value="General" checked><label for="platform-general"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"></path></svg>General</label></div>
+                      <div><input type="radio" id="platform-instagram" name="platform" value="Instagram"><label for="platform-instagram"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2c-2.717 0-3.056.01-4.122.06-1.065.05-1.79.217-2.428.465a4.898 4.898 0 0 0-1.772 1.153 4.9 4.9 0 0 0-1.153 1.772c-.247.637-.415 1.363-.465 2.428C2.01 8.944 2 9.283 2 12s.01 3.056.06 4.122c.05 1.065.217 1.79.465 2.428a4.898 4.898 0 0 0 1.153 1.772 4.9 4.9 0 0 0 1.772 1.153c.637.247 1.363.415 2.428.465C8.944 21.99 9.283 22 12 22s3.056-.01 4.122-.06c1.065-.05 1.79-.217 2.428-.465a4.898 4.898 0 0 0 1.772-1.153 4.9 4.9 0 0 0 1.153-1.772c.247-.637.415-1.363.465-2.428C21.99 15.056 22 14.717 22 12s-.01-3.056-.06-4.122c-.05-1.065-.217-1.79-.465-2.428a4.898 4.898 0 0 0-1.153-1.772 4.9 4.9 0 0 0-1.772-1.153c-.637-.247-1.363-.415-2.428-.465C15.056 2.01 14.717 2 12 2zm0 4.6c-2.404 0-4.35 1.946-4.35 4.35s1.946 4.35 4.35 4.35 4.35-1.946 4.35-4.35S14.404 6.6 12 6.6zm0 7.2c-1.549 0-2.8-1.251-2.8-2.8s1.251-2.8 2.8-2.8 2.8 1.251 2.8 2.8-1.251 2.8-2.8 2.8zm5.55-6.3c-.537 0-.97.433-.97.97s.433.97.97.97.97-.433.97-.97-.433-.97-.97-.97z"></path></svg>Instagram</label></div>
+                      <div><input type="radio" id="platform-linkedin" name="platform" value="LinkedIn"><label for="platform-linkedin"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14zm-8.26 13.5H8.47V9.74h2.27v4.76zM9.61 8.52c-.7 0-1.26-.57-1.26-1.26s.57-1.26 1.26-1.26c.7 0 1.26.57 1.26 1.26s-.56 1.26-1.26 1.26zm6.13 4.98c0-2.6-1.42-3.8-3.32-3.8-1.51 0-2.27.83-2.65 1.55v-1.3H7.5v6.59h2.27v-3.24c0-.88.16-1.74 1.26-1.74 1.09 0 1.1.97 1.1 1.79v3.19h2.27v-3.79z"></path></svg>LinkedIn</label></div>
+                      <div><input type="radio" id="platform-twitter" name="platform" value="Twitter"><label for="platform-twitter"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>Twitter</label></div>
+                      <div><input type="radio" id="platform-facebook" name="platform" value="Facebook"><label for="platform-facebook"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879V14.89h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v7.028C18.343 21.128 22 16.991 22 12z"></path></svg>Facebook</label></div>
+                  </div>
+              </div>
+              <button type="submit" class="w-full py-3 bg-blue-600 hover:bg-blue-700 rounded-xl font-bold text-white shadow-lg transition-transform transform hover:scale-105">Generate Post</button>
+        </form>
+
+        {% if result %}
+        <div class="mt-8 p-6 bg-input rounded-xl relative">
+            <button id="copyPostBtn" title="Copy post" class="absolute top-4 right-4 p-2 rounded-full text-secondary hover:bg-main transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            </button>
+            <h2 class="text-xl font-semibold text-main">Generated Post:</h2>
+            <p id="postOutput" class="whitespace-pre-wrap mt-2 text-secondary">{{ result.post }}</p>
+            
+            <div class="mt-4 pt-4 border-t border-color relative">
+                 <button id="copyHashtagsBtn" title="Copy hashtags" class="absolute top-4 right-0 p-2 rounded-full text-secondary hover:bg-main transition-colors">
+                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                 </button>
+                 <h3 class="text-lg font-semibold text-main">Suggested Hashtags:</h3>
+                 <p id="hashtagsOutput" class="text-blue-500 dark:text-blue-400 mt-1">{{ result.hashtags | join(' ') }}</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // --- Theme Toggle Logic ---
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIconLight = document.getElementById('theme-icon-light');
+        const themeIconDark = document.getElementById('theme-icon-dark');
+        
+        function applyTheme(theme) {
+            if (theme === 'dark') {
+                document.documentElement.classList.remove('light');
+                document.documentElement.classList.add('dark');
+                themeIconLight.classList.remove('hidden');
+                themeIconDark.classList.add('hidden');
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.documentElement.classList.add('light');
+                themeIconLight.classList.add('hidden');
+                themeIconDark.classList.remove('hidden');
+            }
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const isDark = document.documentElement.classList.toggle('dark');
+            const newTheme = isDark ? 'dark' : 'light';
+            localStorage.setItem('theme', newTheme);
+            applyTheme(newTheme);
+        });
+
+        // Apply saved theme on page load
+        const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        applyTheme(savedTheme);
+
+
+        // --- Copy to Clipboard Logic ---
+        function copyToClipboard(text, buttonElement) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalContent = buttonElement.innerHTML;
+                buttonElement.innerHTML = `<svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`;
+                setTimeout(() => {
+                    buttonElement.innerHTML = originalContent;
+                }, 2000);
+            }).catch(err => console.error('Failed to copy!', err));
+        }
+
+        // Add event listeners only if the buttons exist on the page
+        document.addEventListener('DOMContentLoaded', () => {
+            const copyPostBtn = document.getElementById('copyPostBtn');
+            const copyHashtagsBtn = document.getElementById('copyHashtagsBtn');
+
+            if(copyPostBtn) {
+                copyPostBtn.addEventListener('click', () => {
+                    const postText = document.getElementById('postOutput').innerText;
+                    copyToClipboard(postText, copyPostBtn);
+                });
+            }
+
+            if(copyHashtagsBtn) {
+                copyHashtagsBtn.addEventListener('click', () => {
+                    const hashtagsText = document.getElementById('hashtagsOutput').innerText;
+                    copyToClipboard(hashtagsText, copyHashtagsBtn);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
