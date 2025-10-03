@@ -10,8 +10,8 @@ load_dotenv()
 app = Flask(__name__)
 
 # --- 2. LangChain Setup ---
-# THIS IS THE CORRECTED LINE:
-# We get the environment variable by its NAME, not its value.
+# This is the corrected line:
+# It gets the environment variable by its NAME, not its value.
 llm = ChatGoogleGenerativeAI(
     model="gemini-2.5-flash",
     google_api_key=os.environ.get("GOOGLE_API_KEY"),
@@ -19,7 +19,6 @@ llm = ChatGoogleGenerativeAI(
 )
 parser = JsonOutputParser()
 
-# The prompt now includes the {word_count_instruction} placeholder
 prompt_template = """
 You are a creative and expert social media assistant. Your task is to generate a post based on the user's specifications.
 
