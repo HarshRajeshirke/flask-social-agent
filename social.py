@@ -17,7 +17,7 @@ app = Flask(__name__)
 # This is the most reliable way to ensure it works both locally and when deployed.
 llm = ChatGoogleGenerativeAI(
     model="gemini-2.5-flash",
-    google_api_key=os.environ.get("GOOGLE_API_KEY"),
+    google_api_key=os.environ.get("AIzaSyBTeiQVr8-prrPBMucs69HYM1KgBh38iz8"),
     temperature=0.8
 )
 parser = JsonOutputParser()
