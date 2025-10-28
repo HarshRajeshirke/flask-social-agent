@@ -10,21 +10,15 @@
         body { font-family: 'Inter', sans-serif; transition: background-color 0.3s, color 0.3s; }
         .icon-selector input[type="radio"] { display: none; }
         .icon-selector label {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.75rem 1rem;
-            border-radius: 0.75rem;
-            border: 2px solid transparent;
-            cursor: pointer;
-            transition: all 0.2s ease-in-out;
-            white-space: nowrap;
+            display: flex; align-items: center; justify-content: center;
+            padding: 0.75rem 1rem; border-radius: 0.75rem; border: 2px solid transparent;
+            cursor: pointer; transition: all 0.2s ease-in-out; white-space: nowrap;
         }
         .icon-selector svg { width: 1.25rem; height: 1.25rem; margin-right: 0.5rem; }
         
-        /* Dark Mode */
+        /* Dark Mode Styles */
         .dark .bg-main { background-color: #111827; } .dark .bg-card { background-color: #1f2937; } .dark .bg-input { background-color: #374151; } .dark .text-main { color: #f9fafb; } .dark .text-secondary { color: #9ca3af; } .dark .border-color { border-color: #4b5563; } .dark .icon-selector label { border-color: #4b5563; background-color: #374151; color: #d1d5db; } .dark .icon-selector label:hover { background-color: #4b5563; } .dark .icon-selector input[type="radio"]:checked + label { border-color: #3b82f6; background-color: #3b82f6; color: white; }
-        /* Light Mode */
+        /* Light Mode Styles */
         .light .bg-main { background-color: #f3f4f6; } .light .bg-card { background-color: #ffffff; } .light .bg-input { background-color: #e5e7eb; } .light .text-main { color: #111827; } .light .text-secondary { color: #4b5563; } .light .border-color { border-color: #d1d5db; } .light .icon-selector label { border-color: #d1d5db; background-color: #f3f4f6; color: #374151; } .light .icon-selector label:hover { background-color: #e5e7eb; } .light .icon-selector input[type="radio"]:checked + label { border-color: #3b82f6; background-color: #3b82f6; color: white; }
     </style>
 </head>
@@ -41,15 +35,15 @@
         <form method="POST" class="space-y-6">
              <div>
                 <label for="topic" class="block text-sm font-medium text-secondary mb-2">Your Topic:</label>
+                <!-- Retains Topic -->
                 <textarea name="topic" id="topic" class="w-full h-24 p-4 rounded-xl bg-input text-main border border-color focus:outline-none focus:ring-2 focus:ring-blue-500" required>{{ form_data.topic or '' }}</textarea>
             </div>
-            <div>
-                <label for="word_count" class="block text-sm font-medium text-secondary mb-2">Desired Word Count (optional):</label>
-                <input type="number" name="word_count" id="word_count" value="{{ form_data.word_count or '' }}" class="w-full p-4 rounded-xl bg-input text-main border border-color focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g., 75">
-            </div>
+            <!-- REMOVED: Desired Word Count input field -->
+            
             <div>
                 <label class="block text-sm font-medium text-secondary mb-2">Select Tone:</label>
                 <div class="icon-selector grid grid-cols-2 sm:grid-cols-5 gap-3">
+                    <!-- Professional is text-only for fit -->
                     <div><input type="radio" id="tone-professional" name="tone" value="Professional" {% if form_data.tone == 'Professional' or not form_data.tone %}checked{% endif %}><label for="tone-professional">Professional</label></div>
                     <div><input type="radio" id="tone-casual" name="tone" value="Casual" {% if form_data.tone == 'Casual' %}checked{% endif %}><label for="tone-casual"><span class="mr-2">😎</span>Casual</label></div>
                     <div><input type="radio" id="tone-funny" name="tone" value="Funny" {% if form_data.tone == 'Funny' %}checked{% endif %}><label for="tone-funny"><span class="mr-2">😂</span>Funny</label></div>
@@ -60,6 +54,7 @@
             <div>
                 <label class="block text-sm font-medium text-secondary mb-2">Select Platform:</label>
                 <div class="icon-selector grid grid-cols-2 sm:grid-cols-5 gap-3">
+                    <!-- FIX: Removed icons from LinkedIn and Twitter -->
                     <div><input type="radio" id="platform-general" name="platform" value="General" {% if form_data.platform == 'General' or not form_data.platform %}checked{% endif %}><label for="platform-general"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"></path></svg>General</label></div>
                     <div><input type="radio" id="platform-instagram" name="platform" value="Instagram" {% if form_data.platform == 'Instagram' %}checked{% endif %}><label for="platform-instagram"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"></path></svg>Instagram</label></div>
                     <div><input type="radio" id="platform-linkedin" name="platform" value="LinkedIn" {% if form_data.platform == 'LinkedIn' %}checked{% endif %}><label for="platform-linkedin">LinkedIn</label></div>
